@@ -1,0 +1,187 @@
+﻿@page "/rentalcontroller"
+@using FinalProjectCPSY200.Data
+
+
+<h3>Rental Controller</h3>
+
+<h4>Search, Update, and Remove</h4>
+<P>Sorry about this part, no feature realized due to my work. But please turn to 'Add' downbelow</P>
+<div class="searchRentalInfo">
+    <div class="searchId">
+        <div>Rental ID</div>
+        <input placeholder="Rental ID" type="number" @bind="rentalID" />
+        <button class="searchRental" onclick="searchRentalById">Search</button>
+        @* <span class="infoList">@customerInfoTable</span> *@
+    </div>
+    <div class="customerID">
+        <div>Customer ID</div>
+        <input placeholder="" type="number" @bind="customerID" />
+    </div>
+    <div class="customerLastName">
+        <div>Customer Last Name</div>
+        <input placeholder="" type="text" @bind="customerLastName" />
+    </div>
+    <div class="date">
+        <div>Date</div>
+        <input placeholder="" type="number" @bind="date" />
+    </div>
+    <div class="item">
+        <div>Item</div>
+        <input placeholder="" type="text" @bind="item" />
+    </div>
+    <div>
+        <button class="saveRental" onclick="saveRental">Save</button>
+        <button class="removeRental" onclick="removeRental">Remove</button>
+    </div>
+
+</div>
+
+@*Part 2*@
+<h4>Add</h4>
+<p>Thank god I complete a coarse version of this part. You can add a rental here. There are two tables here: 1. Reantals 2. Rental Items</p>
+<p>And sorry about the date bar, I spent hours to try different date type to match html c# and sqlserver, but I failed</p>
+<p>Eventually, I gave up and modified the datatype to int....I know it looks ridiculous</p>
+<div class="searchRentalInfo">
+    <div class="searchId">
+        <div>Rental ID</div>
+        <input placeholder="Rental ID" type="number" @bind="newRentalID" />
+    </div>
+
+    <div class="searchCustomerInfo">
+        <div class="searchId">
+            <div>Customer ID</div>
+            <div>Click search to fill the lastName box automatically</div>
+            <input placeholder="Customer ID" type="number" @bind="customerID" />
+            <button class="searchCustomer" @onclick="searchCustomerById">Search</button>
+            <div>@message</div>
+
+            @* <span class="infoList">@customerInfoTable</span> *@
+        </div>
+    </div>
+    <div class="newCustomerLastName">
+        <div>Customer Last Name</div>
+        <input placeholder="" type="text" @bind="targetCustomerLastName" />
+    </div>
+    <div class="date">
+        <div>Date</div>
+
+        <input placeholder="@placeHolder" type="number" @bind="currentDate" />
+    </div>
+
+    <div class="searchEquipmentInfo">
+        <div class="searchId">
+            <div>Item</div>
+            <div>Click search, it will show weather the equipment is available downbelow the box.</div>
+            <input placeholder="Use ',' to seperate" type="number" @bind="newItem" />
+            <button class="searchItem" @onclick="searchEquipmentById">Search</button>
+        </div>
+        <div>@message</div>
+    </div>
+    <div class="rentalDate">
+        <div>Rental Date</div>
+        <input placeholder="" type="number" @bind="rentalDate" />
+    </div>
+    <div class="returnDate">
+        <div>Return Date</div>
+        <input placeholder="" type="number" @bind="returnDate" />
+    </div>
+
+    <button class="addEquipment" @onclick="addRental">Add Rental</button>
+    <div>@message</div>
+    <div>@messageRentalItem</div>
+</div>
+
+
+<div class="bottom">
+    @* <span>@cautionInfo</span> *@
+    @* <button class="reservebutton" @onclick="makeReservation">Reserve</button> *@
+    @* <p class="codeInfo">Reservation Code: D1256</p> *@
+</div>
+
+@code {
+    int rentalID = 0;
+    int customerID = 0;
+    string customerLastName = "";
+    int date;
+    DateTime placeHolder = DateTime.Today;
+    int item;
+
+    int newRentalID;
+    string newCustomerID = "";
+    string targetCustomerLastName = "";
+    int currentDate;
+    int newItem;
+
+    string message;
+    string messageRentalItem;
+    string cautionInfo = "";
+
+    int rentalDate;
+    int returnDate;
+
+    public void searchRentalById()
+    {
+
+    }
+    public void saveRental()
+    {
+
+    }
+    public void MakeNewRental()
+    {
+
+    }
+    public void RemoveRental()
+    {
+        // check customerID
+        //
+    }
+    public void searchCustomerById()
+    {
+        message = null;
+        DataConnection conn = new DataConnection();
+        Customer customer = conn.searchCustomer(customerID);
+        conn.disconnect();
+        if (customer is null)
+        {
+            message = "Customer not found, please add client first";
+        }
+        else
+        {
+            targetCustomerLastName = customer.LastName;
+
+        }
+    }
+    public void searchEquipmentById()
+    {
+        message = null;
+        DataConnection conn = new DataConnection();
+        Equipment equipment = conn.searchEquipment(newItem);
+        conn.disconnect();
+        if (equipment is null)
+        {
+            message = "Equipment not found";
+        }
+        else
+        {
+
+            message = "Equipment available";
+        }
+    }
+    public void addRental()
+    {
+        message = null;
+        DataConnection conn = new DataConnection();
+        message = conn.insertRental(newRentalID, currentDate, customerID, newItem, rentalDate, returnDate);
+        conn.disconnect();
+        addRentalItem();
+    }
+    public void addRentalItem()
+    {
+        message = null;
+        DataConnection conn = new DataConnection();
+        messageRentalItem = conn.insertRentalItem(newRentalID, newItem, rentalDate, returnDate);
+        conn.disconnect();
+
+    }
+}

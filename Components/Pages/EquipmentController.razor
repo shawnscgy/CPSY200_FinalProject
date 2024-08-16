@@ -1,0 +1,151 @@
+﻿@page "/equipmentcontroller"
+@using FinalProjectCPSY200.Data
+
+<div class="Partone">
+    <h3>Equipment Controller</h3>
+    <h4>Search, Update, and Remove</h4>
+    <p>In this part, I did not complete the feature of update</p>
+    <p>Equipment number has been in the DB: 101, 201.....</p>
+    <div class="searchEquipmentInfo">
+        <div class="searchId">
+            <div>Equipment ID</div>
+            <input placeholder="Equipment ID" type="number" @bind="equipmentID" />
+            <button class="searchEquipment" @onclick="searchEquipmentById">Search</button>
+
+            @* <span class="infoList">@customerInfoTable</span> *@
+        </div>
+        <div class="category">
+            <div>Category</div>
+            <input placeholder="" type="number" @bind="category" />
+        </div>
+        <div class="name">
+            <div>Name</div>
+            <input placeholder="" type="text" @bind="name" />
+        </div>
+        <div class="description">
+            <div>Description</div>
+            <input placeholder="" type="text" @bind="description" />
+        </div>
+        <div class="dailyRentalCost">
+            <div>Daily Rental Cost</div>
+            <input placeholder="" type="number" @bind="dailyRentalCost" />
+        </div>
+
+        <div>
+            <button class="saveEquipment" onclick="saveEquipment">Save</button>
+            <button class="removeEquipment" @onclick="removeEquipment">Remove</button>
+            <div>@message</div>
+        </div>
+
+    </div>
+</div>
+
+@*Part 2*@
+<div class="Parttwo">
+    <h4>Add</h4>
+    <div class="addEquipmentInfo">
+        <div class="addId">
+            <div>Equipment ID</div>
+            <input placeholder="Equipment ID" type="number" @bind="newEquipmentID" />
+        </div>
+        <div class="category">
+            <div>Category</div>
+            <input placeholder="" type="number" @bind="newCategory" />
+        </div>
+        <div class="name">
+            <div>Name</div>
+            <input placeholder="" type="text" @bind="newName" />
+        </div>
+        <div class="description">
+            <div>Description</div>
+            <input placeholder="" type="text" @bind="newDescription" />
+        </div>
+        <div class="dailyRentalCost">
+            <div>Daily Rental Cost</div>
+            <input placeholder="" type="number" @bind="newDailyRentalCost" />
+        </div>
+
+        <button class="addEquipment" @onclick="addEquipment">Add</button>
+        <div>@message</div>
+    </div>
+</div>
+<div class="Partthree">
+    <h4>Show All Clients</h4>
+    <button class="DisplayAll" @onclick="displayAllEquipments">Display All the Equipment</button>
+    <div>
+        @equipmentInfoTable
+    </div>
+</div>
+
+<div class="bottom">
+    @* <span>@cautionInfo</span> *@
+    @* <button class="reservebutton" @onclick="makeReservation">Reserve</button> *@
+    @* <p class="codeInfo">Reservation Code: D1256</p> *@
+</div>
+
+@code {
+    int equipmentID = 0;
+    string name = "";
+    string description = "";
+    float dailyRentalCost = 0;
+    int category = 0;
+
+    int newEquipmentID = 0;
+    string newName = "";
+    string newDescription = "";
+    float newDailyRentalCost = 0;
+    int newCategory;
+
+    string message;
+    List<string> equipments = new List<string>();
+
+    string equipmentInfoTable = "";
+
+    public void searchEquipmentById()
+    {
+        message = null;
+        DataConnection conn = new DataConnection();
+        Equipment equipment = conn.searchEquipment(equipmentID);
+        conn.disconnect();
+        if (equipment is null)
+        {
+            message = "Equipment not found";
+        }
+        else
+        {
+            category = equipment.Category;
+            name = equipment.EquipmentName;
+            description = equipment.Description;
+            dailyRentalCost = equipment.DailyRentalCost;
+        }
+    }
+    public void saveEquipment()
+    {
+
+    }
+    public void addEquipment()
+    {
+        message = null;
+        DataConnection conn = new DataConnection();
+        message = conn.insertEquipment(newEquipmentID, newCategory, newName, newDescription, newDailyRentalCost);
+        conn.disconnect();
+    }
+    public void removeEquipment()
+    {
+        message = null;
+        DataConnection conn = new DataConnection();
+        message = conn.removeEquipment(equipmentID);
+        conn.disconnect();
+    }
+    public void displayAllEquipments()
+    {
+        equipmentInfoTable = null;
+        DataConnection conn = new DataConnection();
+        equipments = conn.displayAllEquipments();
+        foreach (string row in equipments)
+        {
+            equipmentInfoTable += row;
+        }
+        conn.disconnect();
+    }
+}

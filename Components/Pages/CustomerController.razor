@@ -1,0 +1,157 @@
+﻿@page "/customercontroller"
+@using FinalProjectCPSY200.Data
+
+<div class="Partone">
+    <h3>Customer Controller</h3>
+
+    <h4>Search, Update, and Remove</h4>
+    <p>In this part, I did not finish the feature for remove</p>
+    <div class="searchCustomerInfo">
+        <div class="searchId">
+            <div>Customer ID</div>
+            <input placeholder="Customer ID" type="number" @bind="customerID" />
+            <div>@message</div>
+            <button class="searchCustomer" @onclick="searchCustomerById">Search</button>
+            @* <span class="infoList">@customerInfoTable</span> *@
+        </div>
+        <div class="lastName">
+            <div>Last Name</div>
+            <input placeholder="" type="text" @bind="lastName" />
+        </div>
+        <div class="firstName">
+            <div>First Name</div>
+            <input placeholder="" type="text" @bind="firstName" />
+        </div>
+        <div class="contactPhone">
+            <div>Contact Phone</div>
+            <input placeholder="" type="text" @bind="contactPhone" />
+        </div>
+        <div class="email">
+            <div>Email</div>
+            <input placeholder="" type="text" @bind="email" />
+        </div>
+        <div class="note">
+            <div>Note</div>
+            <input placeholder="" type="text" @bind="note" />
+        </div>
+        <div>
+            <button class="saveCustomer" @onclick="updateCustomer">Save</button>
+            <button class="removeCustomer" @onclick="removeCustomer">Remove</button>
+            <div>@message</div>
+        </div>
+
+    </div>
+</div>
+<div class="Parttwo">
+
+    @*Part 2*@
+    <h4>Add</h4>
+    <div class="addCustomerInfo">
+        <div class="addId">
+            <div>Customer ID</div>
+            <input placeholder="Customer ID" type="number" @bind="newCustomerID" />
+        </div>
+        <div class="lastName">
+            <div>Last Name</div>
+            <input placeholder="" type="text" @bind="newLastName" />
+        </div>
+        <div class="firstName">
+            <div>First Name</div>
+            <input placeholder="" type="text" @bind="newFirstName" />
+        </div>
+        <div class="contactPhone">
+            <div>Contact Phone</div>
+            <input placeholder="" type="text" @bind="newContactPhone" />
+        </div>
+        <div class="email">
+            <div>Email</div>
+            <input placeholder="" type="text" @bind="newEmail" />
+        </div>
+        <div class="note">
+            <div>Note</div>
+            <input placeholder="" type="text" @bind="newNote" />
+        </div>
+        <button class="addCustomer" @onclick="addCustomer">Add</button>
+        <div>@message</div>
+    </div>
+</div>
+<div class="Partthree">
+    <h4>Show All Clients</h4>
+    <button class="DisplayAll" @onclick="displayAllCustomers">Display All the Customers</button>
+    <div>
+        @customerInfoTable
+    </div>
+</div>
+
+
+@code {
+    int customerID = 0;
+    string lastName = "";
+    string firstName = "";
+    string contactPhone = "";
+    string email = "";
+    string note = "";
+
+    int newCustomerID = 0;
+    string newLastName = "";
+    string newFirstName = "";
+    string newContactPhone = "";
+    string newEmail = "";
+    string newNote;
+
+    string cautionInfo = "";
+    string message;
+
+
+    List<string> customers;
+
+    string customerInfoTable;
+    public void searchCustomerById()
+    {
+        message = null;
+        DataConnection conn = new DataConnection();
+        Customer customer = conn.searchCustomer(customerID);
+        conn.disconnect();
+        if (customer is null)
+        {
+            message = "Customer not found";
+        }
+        else
+        {
+            lastName = customer.LastName;
+            firstName = customer.FirstName;
+            contactPhone = customer.ContactPhone;
+            email = customer.Email;
+            note = customer.Note;
+        }
+    }
+
+    public void addCustomer()
+    {
+        message = null;
+        DataConnection conn = new DataConnection();
+        message = conn.insertCustomer(newCustomerID, newLastName, newFirstName, newContactPhone, newEmail, newNote);
+        conn.disconnect();
+    }
+    public void updateCustomer()
+    {
+        DataConnection conn = new DataConnection();
+        message = conn.updateCustomer(customerID, lastName, firstName, contactPhone, email, note);
+        conn.disconnect();
+    }
+    public void removeCustomer()
+    {
+        DataConnection conn = new DataConnection();
+    }
+    public async void displayAllCustomers()
+    {
+        customerInfoTable = null;
+        DataConnection conn = new DataConnection();
+        customers = conn.displayAllCustomers();
+        foreach(string row in customers)
+        {
+            customerInfoTable += row;
+        }
+        conn.disconnect();
+    }
+}

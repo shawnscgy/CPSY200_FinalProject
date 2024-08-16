@@ -1,0 +1,36 @@
+﻿@page "/report"
+@using FinalProjectCPSY200.Data
+
+
+<h3>Report</h3>
+
+<div class="searchCustomerInfo">
+    <div class="searchId">
+        <div>Customer ID</div>
+        <input placeholder="Customer ID" type="number" @bind="customerID" />
+        <button class="searchCustomer" onclick="searchCustomerById">Search</button>
+        @* <span class="infoList">@customerInfoTable</span> *@
+    </div>
+    
+
+</div>
+
+@code {
+    int customerID = 0;
+    string lastName = "";
+    string firstName = "";
+    string contactPhone = "";
+    string email = "";
+
+    
+
+    string cautionInfo = "";
+
+
+    string customerInfoTable;
+    public void searchCustomerById()
+    {
+        customerInfoTable = $"Last Name: {lastName}\nFirst Name: {firstName}\nContactPhone: {contactPhone}\nEmail: {email}\nPurchase:";
+    }
+
+}

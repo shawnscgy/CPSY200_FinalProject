@@ -1,0 +1,37 @@
+﻿@page "/categorycontroller"
+@using FinalProjectCPSY200.Data
+
+<h3>Category Controller</h3>
+
+<h4>Add</h4>
+<div class="categoryID">
+    <div class="addId">
+        <div>Category ID</div>
+        <input placeholder="Category ID" type="number" @bind="newCategoryID" />
+    </div>
+    <div class="newCategoryName">
+        <div>Category Name</div>
+        <input placeholder="" type="text" @bind="newCategoryName" />
+    </div>
+    <div>
+        @message
+    </div>
+</div>
+
+
+<div class="bottom">
+    <button class="reservebutton" @onclick="addCategory">Save</button>
+</div>
+
+@code {
+    int newCategoryID;
+    string newCategoryName;
+    string message;
+
+    public async void addCategory()
+    {
+        DataConnection conn = new DataConnection();
+        message = conn.insertCategory(newCategoryID, newCategoryName);
+        conn.disconnect();
+    }
+}
